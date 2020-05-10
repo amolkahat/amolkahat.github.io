@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Amol Kahat, Blog">
-        <meta name="keywords" content="">
+        <meta name="description" content="PythonPune was announced the Docker meetup on the September 18. This meetup was hosted by Suraj Deshmukh. He works for the Red Hat in Banglore. He works on Project Atomic. The meetup was started...">
+        <meta name="keywords" content="docker, meetup">
         <link rel="icon" href="/favicon.ico">
 
-        <title>Homepage - Amol Kahat</title>
+        <title>Docker Meetup Sept-16 - Amol Kahat</title>
 
         <!-- Stylesheets -->
         <link href="/theme/css/all.min.css" rel="stylesheet">
@@ -16,6 +16,7 @@
 
         <!-- RSS Feeds -->
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
         <!-- /RSS Feeds -->
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -50,17 +51,23 @@
             <!-- /Static navbar -->
 
             <!-- Header -->
+    <!-- Header -->
     <div class="container header-wrapper">
         <div class="row">
               <div class="col-lg-12">
                   <div class="header-content">
-                      <h1 class="header-title">Blog</h1>
+                      <h1 class="header-title">Docker Meetup Sept-16</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Thu 29 September 2016, in category <a href="/category/pythonpune.html">Pythonpune</a></p>
                       <div class="header-underline"></div>
-                      <p class="header-subtitle header-subtitle-homepage">STACK_CREATED</p>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/docker.html">docker</a>, <a href="/tag/meetup.html">meetup</a>                      </p>
                   </div>
               </div>
         </div>
     </div>
+    <!-- /Header -->
             <!-- /Header -->
 
         </div>
@@ -68,39 +75,54 @@
 
 
         <!-- Content -->
-    
-    <div class="archive-container">
-        <div class="container content archive">
-            <h2><a href="/index.html">Last Posts </a></h2>
-            <dl class="dl-horizontal">
-                <dt>Sun 01 December 2019</dt>
-                <dd><a href="/tor-browser.html">Tor Browser</a></dd>
-                <dt>Mon 13 November 2017</dt>
-                <dd><a href="/python-pune-4-months-planning.html">Python Pune 4 Months Planning</a></dd>
-                <dt>Fri 27 October 2017</dt>
-                <dd><a href="/science-hack-day-india-oct-14-15.html">Science Hack Day India (Oct 14-15)</a></dd>
-                <dt>Tue 16 May 2017</dt>
-                <dd><a href="/hacking-with-weechat.html">Hacking with Weechat</a></dd>
-                <dt>Sat 07 January 2017</dt>
-                <dd><a href="/pyladie-pune-meetup-7-jan-2017.html">PyLadie Pune Meetup 7 Jan - 2017</a></dd>
-                <dt>Thu 29 September 2016</dt>
-                <dd><a href="/docker-meetup-sept-16.html">Docker Meetup Sept-16</a></dd>
-                <dt>Sun 28 August 2016</dt>
-                <dd><a href="/pyladies-meetup-august-2016.html">PyLadies Meetup August-2016</a></dd>
-                <dt>Fri 01 July 2016</dt>
-                <dd><a href="/dogtag-installation.html">Dogtag - Installation (Interactive)</a></dd>
-                <dt>Wed 29 June 2016</dt>
-                <dd><a href="/data-analysis-hackathon-jun-16.html">Data Analysis Hackathon- Jun 16</a></dd>
-                <dt>Tue 28 June 2016</dt>
-                <dd><a href="/dogtag.html">Dogtag</a></dd>
-            </dl>
-        </div>
+    <div class="container content">
+        <p><a href="http://meetup.com/PythonPune/">PythonPune</a> was announced the Docker meetup on the September 18. This meetup was hosted by <a href="https://twitter.com/surajd_">Suraj Deshmukh</a>. He works for the Red Hat in Banglore. He works on Project Atomic.</p>
+<p>The meetup was started at 10:30. Around 40-50 people was there. As usual <a href="https://twitter.com/ciypro">Chandan Kumar</a> gave little bit introduction about the speaker. After the Chandan's talk Suraj started with his introduction. Then he started with Docker introduction.</p>
+<p><strong>What is Docker?</strong></p>
+<p>Docker is light weight container/virtualization platform. It is application packaging and delivering mechanism. <!--more--></p>
+<p><strong>Why Docker?</strong></p>
+<ul>
+<li>Docker is very light weight container virtualization platform.</li>
+<li>Build once and run anywhere.</li>
+<li>It reduces the time for developing an application and putting it on production.</li>
+<li>Lighter than Virtual Machine.</li>
+<li>Less start up time.</li>
+<li>Less container size.</li>
+<li>Can deploy many containers on single host.</li>
+<li>Easy to use.</li>
+</ul>
+<p><strong>Docker Components:</strong></p>
+<p>Docker has 4 main components:</p>
+<ul>
+<li><strong>Image : </strong>It is a template used to launch container.</li>
+<li><strong>Container : </strong>Container holds everything which needed to run an application.</li>
+<li><strong>Registry : </strong>It stores and serves up the actual image assets, and it delegate the authentication to index.</li>
+<li><strong>Index : </strong>It is front end of registry. It manages user accounts, permission, search, tagging, all that nice stuff that's in the public web interface.</li>
+</ul>
+<p><strong>Installation :</strong></p>
+<ul>
+<li># dnf install -f docker</li>
+<li># systemctl start docker</li>
+<li># systemctl enable docker</li>
+</ul>
+<p><strong>Docker Commands :</strong></p>
+<ul>
+<li><strong>docker info :</strong> To check the docker installation information.</li>
+<li><strong>docker search \&lt;image> :</strong> To search docker images with image name.</li>
+<li><strong>docker pull \&lt;image> :</strong> To pull / download the image.</li>
+<li><strong>docker images :</strong> To list images in the system.</li>
+<li><strong>docker ps (-a) :</strong>  To list all the docker processes. Using -a option you can see all the recently stopped process.</li>
+<li><strong>docker run -i -t \&lt;image> /bin/bash:</strong> To run the docker container and start its bash command.<strong> </strong></li>
+<li><strong>docker commit :  </strong>To store your docker container as an images.</li>
+<li><strong>docker logs \&lt;ID> : </strong>To look in to the logs of container.</li>
+<li><strong>docker kill \&lt;ID> : </strong>To kill the docker container.</li>
+</ul>
+<p>After all this commands Suraj explains docker files. Using docker files you can build many images at a time.</p>
+<p>This was very nice session of the docker. Thanks Suraj for docker talk. Thanks PythonPune for arranging the meetup.</p>
+
+
+        
     </div>
-<!-- /Navigation -->
-<div class="container navigation">
-    	<a class="navigate pull-right" href="/index2.html">Next <i class="fa fa-caret-right"></i></a>
-</div>              
-<!-- /Navigation --> 
         <!-- /Content --> 
 
         <!-- Footer -->

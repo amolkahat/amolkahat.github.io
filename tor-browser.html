@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Date: 2019-12-30 Venue: Red Hat India Pvt. Ltd. Pune, MH, India Meetup Name: WoSec and InfoSecGirls workshop by Kushal Das Hi, After long time.. I&#39;m writing blog. Today I went to WoSec amd...">
+        <meta name="keywords" content="tor">
+        <link rel="icon" href="/favicon.ico">
+
+        <title>Tor Browser - Amol Kahat</title>
+
+        <!-- Stylesheets -->
+        <link href="/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Amol Kahat</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="/">Homepage</a>
+                                <a href="/categories.html">Categories</a>
+                            <a  href="/pages/about.html">About</a>
+                            <a  href="/pages/presentation.html">Presentations</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">Tor Browser</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Sun 01 December 2019, in category <a href="/category/meetupsconferences.html">Meetups/conferences</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/tor.html">tor</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <p><strong>Date:</strong> 2019-12-30<br>
+<strong>Venue:</strong> Red Hat India Pvt. Ltd. Pune, MH, India</p>
+<p><strong>Meetup Name:</strong> <a href="https://www.meetup.com/WoSEC-India-Women-of-Security/events/266136146/">WoSec and  InfoSecGirls workshop by Kushal Das</a></p>
+<p>Hi, After long time.. I'm writing blog. Today I went to WoSec amd InfoSecGirls meetup,<br>
+and meetup was focused on Tor. Kushal was speaker he talked about<br>
+Tor Browser and it's services. Here are few things which he covered:</p>
+<ol>
+<li>Tor is used for anonymity, when you are using Tor no one can track you.<br>
+   They can see you are connected to some server but they do not see what you are<br>
+   doing there.</li>
+<li>Tor network is part of Dark Network, lot's of .onion sites are hosted using the Tor services.</li>
+<li>
+<p>You can setup .onion website very easy. You just need to have tor browser installed in your system.</p>
+<ol>
+<li>Let's set it up with Django</li>
+<li>Create Simple django project and run it on 80 port.</li>
+<li>
+<p>Edit <strong>/etc/tor/torrc</strong> file and uncomment following lines.  </p>
+<blockquote>
+<p>HiddenServiceDir /var/lib/tor/hidden_service/<br>
+       &gt; HiddenServicePort 80 127.0.0.1:80</p>
+</blockquote>
+</li>
+<li>
+<p>Restart Tor service</p>
+</li>
+<li>You will see there will be one directory in <strong>/var/lib/tor/hidden_services/</strong>,it will contain one file known as hostname, it will be your .onion link.</li>
+<li>Tor Browser version: 0.4.x support version 3 addressing. You cold see that your URL will be <strong>siidrba5vbfitbudvyvrm5gg7exiq2sw4y3cy5v4ims26rz24zribeyd.onion</strong> long. (Note: Version 2 addressing use 16 bit addressing)</li>
+<li>Put that tor URL link in Tor Browser.. and... here you go.. your website is running in Tor network.</li>
+</ol>
+</li>
+<li>
+<p>Setup 16 bit address for our website.</p>
+<ol>
+<li>Edit <strong>/etc/tor/torrc</strong> file</li>
+<li>Add these lines below the <strong>HiddenServicePort</strong> line</li>
+<li>
+<p>HiddenServiceDir /var/lib/tor/service2/  </p>
+<blockquote>
+<p>HiddenServiceVersion 2<br>
+HiddenServicePort 80 127.0.0.1:80</p>
+</blockquote>
+</li>
+<li>
+<p>Well, in above code we are creating one more service to the same website but it will be 16 bit.</p>
+</li>
+<li>Restart Tor service</li>
+<li>You could see that now in <strong>/var/lib/tor/service2/</strong> you could see one more hostname file and it will contain 16 bit <strong>.onion</strong> url link.</li>
+</ol>
+</li>
+<li>
+<p>Now let's see how to setup tor URL link only for specific people.</p>
+<ol>
+<li>
+<p>To setup tor service we uncomment few lins in <strong>/etc/tor/torrc</strong> file. Now let's go and add one more line below our service2.  </p>
+<blockquote>
+<p>HiddenServiceDir /var/lib/tor/service2/<br>
+       &gt; HiddenServiceVersion 2<br>
+       &gt; HiddenServicePort 80 127.0.0.1:80<br>
+       &gt; HiddenServiceAuthorizeClient stealth service2</p>
+</blockquote>
+</li>
+<li>
+<p>It will setup this service for those users whom has the key.<br>
+   (Well, key...?, which key...? will see it)</p>
+</li>
+<li>Restart Tor service.</li>
+<li>
+<p>cat /var/lib/tor/service2/hostname  </p>
+<blockquote>
+<p>\&lt;.onion url> \&lt;secret></p>
+</blockquote>
+</li>
+<li>
+<p>Add that secret to tor Browser's torrc file.<br>
+   Location: <strong>\~/Tor_Browser/Browser/TorBrowser/Data/Tor/torrc</strong></p>
+</li>
+<li>
+<p>HidServAuth nnaiiplq6zzyrfwj.onion d60/MWahqH2TUEIZLJ+HXB</p>
+</li>
+<li>
+<p>And you are set. Restart Tor Browser. You are able to hit the URL.</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>I found Tor very interesting. I love to dig more arount it.</p>
+<ol>
+<li></li>
+</ol>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="/archives.html">Archives</a></li>
+                            <li><a href="/tags.html">Tags</a></li>
+                            <li><a href="/authors.html">Authors</a></li>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://in.linkedin.com/in/amolkahat" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://twitter.com/amolkahat" target="_blank">Twitter</a></li>
+                            <li><a href="https://keybase.io/amolkahat" target="_blank">Keybase</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/amolkahat" target="_blank">Github</a></li>
+                            <li><a href="" target="_blank"></a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; amolkahat.github.io 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

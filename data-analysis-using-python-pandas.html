@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Data analysis is one of the list of complicated topics. Data analysis is very vast. May Pythonpune meetup was on the basis of Data Analysis. May Pythonpune meetup was held in Amazatic Solutions,...">
+        <meta name="keywords" content="ml, python3">
+        <link rel="icon" href="/favicon.ico">
+
+        <title>Data Analysis using Python Pandas - May 2016 - Amol Kahat</title>
+
+        <!-- Stylesheets -->
+        <link href="/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Amol Kahat</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="/">Homepage</a>
+                                <a href="/categories.html">Categories</a>
+                            <a  href="/pages/about.html">About</a>
+                            <a  href="/pages/presentation.html">Presentations</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">Data Analysis using Python Pandas - May 2016</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Sat 04 June 2016, in category <a href="/category/pythonpune.html">Pythonpune</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/ml.html">ml</a>, <a href="/tag/python3.html">python3</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <p>Data analysis is one of the list of complicated topics. Data analysis is very vast. May <a href="http://www.meetup.com/PythonPune/">Pythonpune</a> meetup was on the basis of Data Analysis. May <a href="http://www.meetup.com/PythonPune/events/231212171/">Pythonpune</a> meetup was held in <a href="http://amazatic.com/">Amazatic Solutions</a>, Spot 18 mall, Baner, Pune.</p>
+<p><strong><a href="https://www.facebook.com/sudarshan123/about">Sudarshan Gadhave</a></strong> was the speaker, he works as a Data Engineer at NEC Corporation of America. He working in this field from 3-4 years and he has a good knowledge of python, numpy, python pandas, skitit learn, and other things.</p>
+<p>Sudarshan was started with introduction to python Numpy, and he covered the following topics:</p>
+<ul>
+<li>[Pandas Data Structures and basics]{.full}.</li>
+<li>Data Loading</li>
+<li>Data Wrangling (Clean, Transform, Merge)</li>
+<li>Data Aggregation and grouping operations</li>
+<li>Data Aggregation and grouping operations</li>
+<li>Exploratory Data Analysis and Descriptive Statistics</li>
+<li>Plotting and Visualization</li>
+</ul>
+<!--more-->
+
+<p>Numpy, we can start with it. Numpy is python library which is designed to work with homogeneous multidimensional array object. It is table of numbers of same type. In Numpy dimensions are called as axes, and number of axes is rank.</p>
+<p><strong>For Example:</strong></p>
+<p>[[1, 2, 3]] is example of numpy array, in numpy language it is array of rank 1 and has axis 3. Now consider the example below, which shows the  rank = 2 and axis = 3.</p>
+<p><code>[[1, 2, 3], [5, 6, 7]]</code></p>
+<p>Now we can technically represent it as (rank, axis) format, which is (2, 3). In short it is denote that array has rank=2 and axis=3.</p>
+<p>In python we can define it as :</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="kp">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1">#method create array of 0 to 19, and reshape method arrange it rank 4 and axis 5 &gt;&gt;&gt; a array([[ 0, 1, 2, 3, 4], [ 5, 6, 7, 8, 9], [10, 11, 12, 15, 14], [15, 16, 17, 18, 19]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="kp">shape</span>                          <span class="c1"># It will return the shape of a (4,5)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                             <span class="c1">#Example of Indexing array([0, 1, 2, 3, 4])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>                        <span class="c1">#Printing 1 from table array([1])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="kp">array</span><span class="p">([[</span> <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">],</span> <span class="p">[</span> <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="kp">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">b</span><span class="p">]</span>         <span class="c1">#printing elements in a using [ 0 7 10 16] #indexes in b</span>
+</pre></div>
+
+
+<p>Numpy has two numaric data types. These are int64 and float64.</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; a.dtype dtype(&#39;int64&#39;)
+&gt;&gt;&gt; c = np.array([1.5, 2.5])
+&gt;&gt;&gt; c.dtype dtype(&#39;float64&#39;) 
+</pre></div>
+
+
+<p>You can perform Arithmetic operations on arrays:</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; d = np.array([1.4, 2.2])
+&gt;&gt;&gt; print c+d [ 2.9 4.7]
+&gt;&gt;&gt; print c-d [ 0.1 0.3]
+&gt;&gt;&gt; print c*d [ 2.1 5.5]
+&gt;&gt;&gt; print c/d [ 1.07142857 1.13636364]
+</pre></div>
+
+
+<p>Or you can use Numpy inbuilt methods,</p>
+<ul>
+<li>np.add(c,d),</li>
+<li>np.substract(c,d),</li>
+<li>np.divide(c,d),</li>
+<li>np.multiply(c,d)</li>
+</ul>
+<p><strong>Pandas:</strong></p>
+<p>Pandas is python package which is designed to make working with "relational" or "labled" data.  It is very fast , flexible and expressive data structure liberary.</p>
+<p>Python pandas is suitable for</p>
+<ul>
+<li>Tabluar data</li>
+<li>Ordered and unorderd data</li>
+<li>Arbitary matrix data</li>
+<li>Any other form of observational/staistical data set.</li>
+</ul>
+<p>There are tow primary data structures of pandas,</p>
+<ul>
+<li>Series for 1D data</li>
+<li>DataFrame for 2D data</li>
+</ul>
+<p><strong>Series:</strong></p>
+<p>Series is One-Dimensional array like object containg an array of data and associated array of data labels.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">4</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+</pre></div>
+
+
+<p><strong> DataFrames:</strong></p>
+<p>Two-Dimensional size-mutable heterogeneous tabular data structure with labled axes.</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; data = {&#39;City&#39; : [&#39;Pune&#39;, &#39;Mumbai&#39;, &#39;Delhi&#39;, &#39;Pune&#39;],
+... &#39;Year&#39; : [2012,2013,2012,2013],
+... &#39;Population&#39;: [2.5, 10.1, 9.5, 2.8]}
+&gt;&gt;&gt; df1 = pd.DataFrame(data) 
+&gt;&gt;&gt; df1 
+    City   Population Year 
+0   Pune          2.5 2012
+1   Mumbai       10.1 2013
+2   Delhi         9.5 2012
+3   Pune          2.8 2013
+</pre></div>
+
+
+<p>We can display Selected columns too.</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; df2 = pd.DataFrame(data, columns=[&#39;City&#39;, &#39;Year&#39;])
+&gt;&gt;&gt; df2 
+    City   Year 
+0   Pune   2012
+1   Mumbai 2013
+2   Delhi  2012
+3   Pune   2013
+</pre></div>
+
+
+<p>DataFrame with indexes.</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; df2 = pd.DataFrame(data, columns=[&#39;City&#39;, &#39;Year&#39;], index=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;])
+&gt;&gt;&gt; df2 
+    City   Year
+a   Pune   2012
+b   Mumbai 2013
+c   Delhi  2012
+d   Pune   2013
+</pre></div>
+
+
+<p><strong>Plotting and Visualization:</strong></p>
+<p>For visulaisation data python module matplotlib is used. Matplotlib is 2D plotting library wich produce different types of figures like histogram, 3D view, etc.</p>
+<p>Here is small example:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sin_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cos_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">sin_d</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">cos_d</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X axis&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y axis&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="Figure1" class="alignnone size-full wp-image-428" height="612" src="/images/figure1.jpeg" width="812"> Output of above code.</p>
+<p>That was awesome, that was an interesting topic. Thanks Sudarshan for this wonderful talk.</p>
+<p>Thanks <a href="http://amazatic.com/">Amazatic Solutions</a> for providing venue and arrangements.</p>
+<p>Thanks <a href="https://twitter.com/ciypro?lang=en">Chandan Kumar</a> for arranging this wonderful session.</p>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="/archives.html">Archives</a></li>
+                            <li><a href="/tags.html">Tags</a></li>
+                            <li><a href="/authors.html">Authors</a></li>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://in.linkedin.com/in/amolkahat" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://twitter.com/amolkahat" target="_blank">Twitter</a></li>
+                            <li><a href="https://keybase.io/amolkahat" target="_blank">Keybase</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/amolkahat" target="_blank">Github</a></li>
+                            <li><a href="" target="_blank"></a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; amolkahat.github.io 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

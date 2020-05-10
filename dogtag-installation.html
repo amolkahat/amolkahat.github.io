@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="In previous blog i explained about Dogtag certificate system as an overview. Now lets install it your system. Dogtag certificate system is fully featured system which support multiple options of...">
+        <meta name="keywords" content="">
+        <link rel="icon" href="/favicon.ico">
+
+        <title>Dogtag - Installation (Interactive) - Amol Kahat</title>
+
+        <!-- Stylesheets -->
+        <link href="/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Amol Kahat</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="/">Homepage</a>
+                                <a href="/categories.html">Categories</a>
+                            <a  href="/pages/about.html">About</a>
+                            <a  href="/pages/presentation.html">Presentations</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">Dogtag - Installation (Interactive)</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Fri 01 July 2016, in category <a href="/category/dogtag.html">Dogtag</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <p>In previous blog i explained about <strong>Dogtag certificate system</strong> as an overview. Now lets install it your system. Dogtag certificate system is fully featured system which support multiple options of certificate enrollment and smart card enrollment. This certificate system require large no of dependency.</p>
+<p>Now we look how to install it and how to build it.</p>
+<p>For fedora 23 or later versions :</p>
+<p><code style="display:inline-block;background-color:lightgray;width:100%;">$ sudo dnf install 389-ds-base dogtag-pki</code></p>
+<ul>
+<li><strong>389-ds-base:</strong><ul>
+<li>389-ds-base is directory server which is used by directory server as a back end for Dogtag Certificate System. The certificate system is uses to store certificate request and certificate in the database.</li>
+<li>This is also known as Light Weight Directory Access Protocol (LDAP).</li>
+</ul>
+</li>
+<li><strong>dogtag-pki:</strong><ul>
+<li>dogtag-pki is certificate system rpm files which installs the certificate system environment and dependency.</li>
+<li>This is include stable downstream version of dogtag-pki.</li>
+<li>This project maintained by Red Hat.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Subsystem Installation:</strong></p>
+<ul>
+<li>CA is Certificate Authority which is top of the system. The CA can be installed by two ways<ul>
+<li>Using Interactive Installation</li>
+<li>Using Config File Installation.</li>
+</ul>
+</li>
+<li>Using Interactive installation:<ul>
+<li>Using pkispawn you can install CA and other subsystem. Using pkispawn you can install config file installation too.</li>
+<li>pkispawn command will ask for some parameters.<ul>
+<li><strong>Subsystem:</strong> Specify subsystem which you want to install like CA, KRA, OCSP, TKS, TPS.</li>
+</ul>
+</li>
+<li>Now specify Tomcat Parameters:<ol>
+<li><strong>Instance Name:</strong> Specify Instance name of the subsystem.</li>
+<li><strong>Instance Secure and Unsecure port:</strong> Every subsystem will ask for two ports. One port is secure port and another is unsecure port. The secure port is used for administrator and unsecure port will be used by the users.</li>
+<li><strong>AJP and Management port: </strong>AJP and Management ports are used by tomcat instance.</li>
+</ol>
+</li>
+<li>Administrator Section will prompt for this:<ol>
+<li><strong>Instance User Name: </strong>Instance user name is require when we login to console for edit subsystem profile.</li>
+<li><strong>Instance Password and Confirm Password: </strong>Instance password which is used to login console to edit subsystem profiles.</li>
+<li><strong>Certificate Import:</strong> This option is ask for the certificate to import certificate of CA. If we installing standalone CA then we did not require this option, but for another subsystem this option is optional.</li>
+<li><strong>Export Certificate: </strong>It will store subsystem certificate either in <strong>Client Directory</strong> (If specified) or in <strong>/root/.dogtag/Instance/</strong> directory.</li>
+</ol>
+</li>
+<li>Specify Directory server information:<ul>
+<li><strong>Hostname: </strong>Your machine name. By default it is localhost.localdomain. You can change it to server.example.org.</li>
+<li><strong>LDAPS Connection: </strong>This option will ask for TLS enabled LDAP connection. If you choose secure connection then you have to specify CA certificate which used to crate TLS enabled LDAP.</li>
+<li><strong>LDAP and LDAPS port: </strong>This option will ask for LDAP port. If you choose LDAPS connection then you have to specify LDAPS port too.</li>
+<li><strong>Password: </strong>Password of Directory Server. It was specified at the installation time.</li>
+<li><strong>Base DN: </strong>This is the directory server branch in which data of certificates is stored.</li>
+</ul>
+</li>
+<li>Security Domain:<ul>
+<li><strong>Name of Security Domain: </strong>Security Domain name is a name of your website. For Ex: example.org Security Domain, google.com Security Domain, etc.</li>
+</ul>
+</li>
+<li>Now Begin installation.</li>
+</ul>
+</li>
+<li>After successful installation it will show Admin details like Name, pkcs12 file, certificate database. Instance management commands, subsystem URL.</li>
+</ul>
+<p>To install CA, KRA, OCSP, TKS, TPS all the procedure is same. If you are installing on same tomcat then it will not prompt for tomcat section.</p>
+<p>There is little difference in the installation of TPS subsystem. In TPS you have to specify KRA, and TKS url with base dn i.e. dc=example,dc=org.</p>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="/archives.html">Archives</a></li>
+                            <li><a href="/tags.html">Tags</a></li>
+                            <li><a href="/authors.html">Authors</a></li>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://in.linkedin.com/in/amolkahat" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://twitter.com/amolkahat" target="_blank">Twitter</a></li>
+                            <li><a href="https://keybase.io/amolkahat" target="_blank">Keybase</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/amolkahat" target="_blank">Github</a></li>
+                            <li><a href="" target="_blank"></a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; amolkahat.github.io 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>
