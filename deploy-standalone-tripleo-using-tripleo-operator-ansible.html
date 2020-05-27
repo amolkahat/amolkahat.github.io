@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Tripleo-operator-ansible contains playbooks that can be used to automate TripleO OpenStack deployments. It is just an wrapper around the openstack tripleo cli. Why Tripleo-operator-ansible?...">
+        <meta name="keywords" content="ansible, openstack, tripleo">
+        <link rel="icon" href="/favicon.ico">
+
+        <title>Deploy Standalone TripleO using tripleo-operator-ansible - Amol Kahat</title>
+
+        <!-- Stylesheets -->
+        <link href="/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Amol Kahat</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="/">Homepage</a>
+                                <a href="/categories.html">Categories</a>
+                            <a  href="/pages/about.html">About</a>
+                            <a  href="/pages/presentation.html">Presentations</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">Deploy Standalone TripleO using tripleo-operator-ansible</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Wed 27 May 2020, in category <a href="/category/tripleo.html">Tripleo</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/ansible.html">ansible</a>, <a href="/tag/openstack.html">openstack</a>, <a href="/tag/tripleo.html">tripleo</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <p><a href="https://docs.openstack.org/tripleo-operator-ansible/latest/">Tripleo-operator-ansible</a> contains playbooks that can be used to automate TripleO OpenStack deployments. It is just an wrapper around the openstack tripleo cli.</p>
+<p><strong>Why Tripleo-operator-ansible?</strong></p>
+<ul>
+<li><strong>Automation:</strong> Automate Tripleo Openstack deployment with different scenarios and featureset. It will be very easy to use simple role instead of writing whole code. Automating things using simple role is preferred.</li>
+<li><strong>Code Reuse:</strong> Sometimes developers need to write same code again and again with small changes. That causes code duplication and increase complexity.</li>
+<li><strong>Easy to Use:</strong> Installing and importing this roles is very easy with <a href="https://www.ansible.com/blog/getting-started-with-ansible-collections">ansible-galaxy</a>.</li>
+</ul>
+<p><strong>What is tripleo-operator-ansible?</strong></p>
+<ul>
+<li>It is roles which helps end user to create deployments.</li>
+<li>User can combine different roles and create their own roles as per their requirement.</li>
+</ul>
+<p><strong>What is tripleo-operator-ansible not.</strong></p>
+<ul>
+<li>It do not include user specific logic.</li>
+<li>It is not full TripleO deployment tool yet.</li>
+</ul>
+<p><strong>Deploy TripleO Standalone using tripleo-operator-ansible</strong></p>
+<ul>
+<li>Provision a CentOS-8 vm, with 2 NICs.</li>
+<li>Add stack user, with password less.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>useradd stack
+<span class="nb">echo</span> <span class="s2">&quot;redhat&quot;</span> <span class="p">|</span> passwd --stdin stack
+<span class="nb">echo</span> <span class="s2">&quot;stack ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="p">|</span> tee -a /etc/sudoers.d/stack
+su - stack
+</code></pre></div>
+
+
+<ul>
+<li>Add <a href="https://trunk.rdoproject.org/centos8-master/current-tripleo/">delorean</a> and delorean-deps repo for openstack master</li>
+</ul>
+<div class="highlight"><pre><span></span><code>$ wget https://trunk.rdoproject.org/centos8-master/current-tripleo/delorean.repo -O /etc/yum.repos.d/delorean.repo
+$ wget https://trunk.rdoproject.org/centos8-master/delorean-deps.repo -O /etc/yum.repos.d/delorean-deps.repo
+</code></pre></div>
+
+
+<ul>
+<li>Install tripleo-operator-ansible and ansible. After installation you can find those roles in <code>/usr/share/ansible/roles/</code> directory.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>$ sudo dnf install tripleo-operator-ansible ansible -y
+</code></pre></div>
+
+
+<ul>
+<li>Copy the playbook inside vm.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="c1">###############################################################################</span>
+<span class="c1"># Standalone installation playbook</span>
+<span class="c1">#</span>
+<span class="c1"># Description:</span>
+<span class="c1">#   This is a basic playbook to run a simple standalone node deployment on an</span>
+<span class="c1">#   existing provisioned system.</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+<span class="p p-Indicator">-</span> <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">collections</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tripleo.operator</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">standalone_debug</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">standalone_dns</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">192.168.122.1</span>
+    <span class="nt">standalone_hostname</span><span class="p">:</span> <span class="s">&#39;standalone.localdomain&#39;</span>
+    <span class="nt">standalone_ip</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.24.1</span>
+    <span class="nt">standalone_cidr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">24</span>
+    <span class="nt">standalone_gateway</span><span class="p">:</span>
+    <span class="nt">standalone_local_mtu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1400</span>
+    <span class="nt">standalone_local_interface</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enp2s0</span>
+    <span class="nt">standalone_enable_selinux</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">standalone_virt_type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qemu</span>
+    <span class="nt">install_debug</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+  <span class="nt">tasks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set hostname</span>
+      <span class="nt">hostname</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">standalone_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+      <span class="nt">become</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Configure tripleo repositories</span>
+      <span class="nt">include_role</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo_repos</span>
+      <span class="nt">vars</span><span class="p">:</span>
+        <span class="nt">tripleo_repos_debug</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">install_debug</span><span class="nv"> </span><span class="s">}}&quot;</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ensure system is up to date</span>
+      <span class="nt">yum</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;*&#39;</span>
+        <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">latest</span>  <span class="c1"># noqa 403</span>
+      <span class="nt">register</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packages_updated</span>
+      <span class="nt">become</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="c1"># If you are running playbook inside the vm then it will fail on reboot task.</span>
+    <span class="c1"># If you are running outside the vm then make sure to uncomment it.</span>
+    <span class="c1">#</span>
+    <span class="c1">#- name: Reboot if necessary</span>
+    <span class="c1">#  reboot:</span>
+    <span class="c1">#  become: true</span>
+    <span class="c1">#  when: packages_updated is changed</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install python3 tripleoclient</span>
+      <span class="nt">package</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python3-tripleoclient</span>
+        <span class="nt">state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+      <span class="nt">become</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Generate ContainerParameters.yaml</span>
+      <span class="nt">copy</span><span class="p">:</span>
+        <span class="nt">content</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">parameter_defaults:</span>
+            <span class="no">CloudName: {{ standalone_hostname }}</span>
+            <span class="no">{% if standalone_gateway | default(False) -%}</span>
+            <span class="no">ControlPlaneStaticRoutes:</span>
+              <span class="no">- ip_netmask: 0.0.0.0/0</span>
+                <span class="no">next_hop: {{ standalone_gateway }}</span>
+                <span class="no">default: true</span>
+            <span class="no">{% endif -%}</span>
+            <span class="no">Debug: {{ standalone_debug|bool }}</span>
+            <span class="no">DeploymentUser: {{ ansible_env.USER }}</span>
+            <span class="no">DnsServers: {{ standalone_dns }}</span>
+            <span class="no">KernelIpNonLocalBind: 1</span>
+            <span class="no">NeutronPublicInterface: {{ standalone_local_interface }}</span>
+            <span class="no">NeutronBridgeMappings: datacenter:br-ctlplane</span>
+            <span class="no">NeutronPyshicalBridge: br-ctlplane</span>
+            <span class="no">StandaloneEnableRoutedNetworks: false</span>
+            <span class="no">StandaloneHomeDir: {{ ansible_env.HOME }}</span>
+            <span class="no">InterfacesLocalMtu: {{ standalone_local_mtu }}</span>
+            <span class="no">NovaComputeLibvirtType: {{ standalone_virt_type }}</span>
+            <span class="no">CertmongerCA: local</span>
+            <span class="no">ContainerCli: podman</span>
+            <span class="no">NtpServer: clock.redhat.com</span>
+            <span class="no">SELinuxMode: permissive</span>
+            <span class="no">DockerInsecureRegistryAddress:</span>
+              <span class="no">- 192.168.24.1:8787</span>
+            <span class="no">MasqueradeNetworks:</span>
+              <span class="no">192.168.24.0/24:</span>
+              <span class="no">- 192.168.24.0/24</span>
+            <span class="no">StandaloneCtlplaneSubnets:</span>
+              <span class="no">ctlplane-subnet:</span>
+                <span class="no">DhcpRangeEnd: 192.168.24.40</span>
+                <span class="no">DhcpRangeStart: 192.168.24.20</span>
+                <span class="no">NetworkCidr: 192.168.24.0/24</span>
+                <span class="no">NetworkGateway: 192.168.24.1</span>
+        <span class="nt">dest</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_env.HOME</span><span class="nv"> </span><span class="s">}}/parameters.yaml&quot;</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Generate ContainerImagePrepare</span>
+      <span class="nt">include_role</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo_container_image_prepare_default</span>
+      <span class="nt">vars</span><span class="p">:</span>
+        <span class="nt">tripleo_container_image_prepare_default_output_env_file</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_env.HOME</span><span class="nv"> </span><span class="s">}}/container-image-prepare.yaml&quot;</span>
+
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Run standalone deployment</span>
+      <span class="nt">include_role</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo_deploy</span>
+      <span class="nt">vars</span><span class="p">:</span>
+        <span class="nt">tripleo_deploy_debug</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">standalone_debug</span><span class="nv"> </span><span class="s">}}&quot;</span>
+        <span class="nt">tripleo_deploy_templates</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/usr/share/openstack-tripleo-heat-templates</span>
+        <span class="nt">tripleo_deploy_local_ip</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">standalone_ip</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">standalone_cidr</span><span class="nv"> </span><span class="s">}}&quot;</span>
+        <span class="nt">tripleo_deploy_roles_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/usr/share/openstack-tripleo-heat-templates/roles/Standalone.yaml</span>
+        <span class="nt">tripleo_deploy_environment_files</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/usr/share/openstack-tripleo-heat-templates/environments/standalone/standalone-tripleo.yaml</span>
+          <span class="p p-Indicator">-</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_env.HOME</span><span class="nv"> </span><span class="s">}}/container-image-prepare.yaml&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_env.HOME</span><span class="nv"> </span><span class="s">}}/parameters.yaml&quot;</span>
+        <span class="nt">tripleo_deploy_standalone</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">tripleo_deploy_output_dir</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_env.HOME</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</code></pre></div>
+
+
+<ul>
+<li>Playbook include some roles from tripleo-operator-ansible.</li>
+<li><em>Configure tripleo repositories</em> will configure tripleo repos.</li>
+<li>Install <strong>python3-tripleoclient</strong> package</li>
+<li>"Generate parameters.yaml" will generate ContainerPparameters.yaml file using variables we passed.</li>
+<li>"Generate ContainerImagePrepare" will generate container_image_prepare.yaml file.</li>
+<li>"Run standalone deployment" run <strong>openstack tripleo deploy</strong> command with the parameters.</li>
+<li>You can pass different <a href="https://github.com/openstack/tripleo-heat-templates/tree/stable/ussuri/ci/environments">scenario</a> files in <strong>tripleo_deploy_environment_files</strong></li>
+<li>More tripleo-operator-ansible playbook examples can be found <a href="https://github.com/openstack/tripleo-operator-ansible/tree/master/playbooks">here</a></li>
+<li>Before running playbook, you need to add your 2nd ethernet device name in the playbook. In this deployment outside will be communicated via <strong>enp1s0</strong> device.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">standalone_local_interface</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enp2s0</span>
+</code></pre></div>
+
+
+<ul>
+<li>Run playbook as stack user.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>$ ansible-playbook standalone.yaml
+</code></pre></div>
+
+
+<ul>
+<li>Sit back and enjoy your coffee. It will take around 1 hour (depends on network speed).</li>
+<li>You will found logs in the <strong>/home/stack/standalone_deploy.log</strong> and container logs in <strong>/var/log/tripleo-container-image-prepare.log</strong></li>
+<li>Once deployment finishes, verify deployment.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">OS_CLOUD</span><span class="o">=</span>standalone
+openstack catalog list
+</code></pre></div>
+
+
+<p>Congratulations!! you just successfully installed the TripleO standalone deployment. :)</p>
+<p>Thank you <a href="https://twitter.com/raukadah">Chandan Kumar</a> for configuration related changes.</p>
+<p>If you find any issue, ping us on #tripleo channel on freenode server.</p>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="/archives.html">Archives</a></li>
+                            <li><a href="/tags.html">Tags</a></li>
+                            <li><a href="/authors.html">Authors</a></li>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://in.linkedin.com/in/amolkahat" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://twitter.com/amolkahat" target="_blank">Twitter</a></li>
+                            <li><a href="https://keybase.io/amolkahat" target="_blank">Keybase</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/amolkahat" target="_blank">Github</a></li>
+                            <li><a href="" target="_blank"></a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; amolkahat.github.io 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

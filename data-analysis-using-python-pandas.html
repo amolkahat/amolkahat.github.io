@@ -96,34 +96,36 @@
 <p><code>[[1, 2, 3], [5, 6, 7]]</code></p>
 <p>Now we can technically represent it as (rank, axis) format, which is (2, 3). In short it is denote that array has rank=2 and axis=3.</p>
 <p>In python we can define it as :</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="kp">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1">#method create array of 0 to 19, and reshape method arrange it rank 4 and axis 5 &gt;&gt;&gt; a array([[ 0, 1, 2, 3, 4], [ 5, 6, 7, 8, 9], [10, 11, 12, 15, 14], [15, 16, 17, 18, 19]])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="kp">shape</span>                          <span class="c1"># It will return the shape of a (4,5)</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1">#method create array of 0 to 19, and reshape method arrange it rank 4 and axis 5 &gt;&gt;&gt; a array([[ 0, 1, 2, 3, 4], [ 5, 6, 7, 8, 9], [10, 11, 12, 15, 14], [15, 16, 17, 18, 19]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span>                          <span class="c1"># It will return the shape of a (4,5)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                             <span class="c1">#Example of Indexing array([0, 1, 2, 3, 4])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>                        <span class="c1">#Printing 1 from table array([1])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="kp">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="kp">array</span><span class="p">([[</span> <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">],</span> <span class="p">[</span> <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="kp">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">b</span><span class="p">]</span>         <span class="c1">#printing elements in a using [ 0 7 10 16] #indexes in b</span>
-</pre></div>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">],</span> <span class="p">[</span> <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">b</span><span class="p">]</span>         <span class="c1">#printing elements in a using [ 0 7 10 16] #indexes in b</span>
+</code></pre></div>
 
 
 <p>Numpy has two numaric data types. These are int64 and float64.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; a.dtype dtype(&#39;int64&#39;)
-&gt;&gt;&gt; c = np.array([1.5, 2.5])
-&gt;&gt;&gt; c.dtype dtype(&#39;float64&#39;) 
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span>
+<span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;int64&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">dtype</span>
+<span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+</code></pre></div>
 
 
 <p>You can perform Arithmetic operations on arrays:</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; d = np.array([1.4, 2.2])
-&gt;&gt;&gt; print c+d [ 2.9 4.7]
-&gt;&gt;&gt; print c-d [ 0.1 0.3]
-&gt;&gt;&gt; print c*d [ 2.1 5.5]
-&gt;&gt;&gt; print c/d [ 1.07142857 1.13636364]
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="n">c</span><span class="o">+</span><span class="n">d</span> <span class="p">[</span> <span class="mf">2.9</span> <span class="mf">4.7</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="n">c</span><span class="o">-</span><span class="n">d</span> <span class="p">[</span> <span class="mf">0.1</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="n">c</span><span class="o">*</span><span class="n">d</span> <span class="p">[</span> <span class="mf">2.1</span> <span class="mf">5.5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="n">c</span><span class="o">/</span><span class="n">d</span> <span class="p">[</span> <span class="mf">1.07142857</span> <span class="mf">1.13636364</span><span class="p">]</span>
+</code></pre></div>
 
 
 <p>Or you can use Numpy inbuilt methods,</p>
@@ -149,52 +151,52 @@
 </ul>
 <p><strong>Series:</strong></p>
 <p>Series is One-Dimensional array like object containg an array of data and associated array of data labels.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span> 
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">4</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><strong> DataFrames:</strong></p>
 <p>Two-Dimensional size-mutable heterogeneous tabular data structure with labled axes.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; data = {&#39;City&#39; : [&#39;Pune&#39;, &#39;Mumbai&#39;, &#39;Delhi&#39;, &#39;Pune&#39;],
-... &#39;Year&#39; : [2012,2013,2012,2013],
-... &#39;Population&#39;: [2.5, 10.1, 9.5, 2.8]}
-&gt;&gt;&gt; df1 = pd.DataFrame(data) 
-&gt;&gt;&gt; df1 
-    City   Population Year 
-0   Pune          2.5 2012
-1   Mumbai       10.1 2013
-2   Delhi         9.5 2012
-3   Pune          2.8 2013
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;City&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Pune&#39;</span><span class="p">,</span> <span class="s1">&#39;Mumbai&#39;</span><span class="p">,</span> <span class="s1">&#39;Delhi&#39;</span><span class="p">,</span> <span class="s1">&#39;Pune&#39;</span><span class="p">],</span>
+<span class="o">...</span> <span class="s1">&#39;Year&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">2012</span><span class="p">,</span><span class="mi">2013</span><span class="p">,</span><span class="mi">2012</span><span class="p">,</span><span class="mi">2013</span><span class="p">],</span>
+<span class="o">...</span> <span class="s1">&#39;Population&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">10.1</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">]}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df1</span>
+    <span class="n">City</span>   <span class="n">Population</span> <span class="n">Year</span>
+<span class="mi">0</span>   <span class="n">Pune</span>          <span class="mf">2.5</span> <span class="mi">2012</span>
+<span class="mi">1</span>   <span class="n">Mumbai</span>       <span class="mf">10.1</span> <span class="mi">2013</span>
+<span class="mi">2</span>   <span class="n">Delhi</span>         <span class="mf">9.5</span> <span class="mi">2012</span>
+<span class="mi">3</span>   <span class="n">Pune</span>          <span class="mf">2.8</span> <span class="mi">2013</span>
+</code></pre></div>
 
 
 <p>We can display Selected columns too.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; df2 = pd.DataFrame(data, columns=[&#39;City&#39;, &#39;Year&#39;])
-&gt;&gt;&gt; df2 
-    City   Year 
-0   Pune   2012
-1   Mumbai 2013
-2   Delhi  2012
-3   Pune   2013
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df2</span>
+    <span class="n">City</span>   <span class="n">Year</span>
+<span class="mi">0</span>   <span class="n">Pune</span>   <span class="mi">2012</span>
+<span class="mi">1</span>   <span class="n">Mumbai</span> <span class="mi">2013</span>
+<span class="mi">2</span>   <span class="n">Delhi</span>  <span class="mi">2012</span>
+<span class="mi">3</span>   <span class="n">Pune</span>   <span class="mi">2013</span>
+</code></pre></div>
 
 
 <p>DataFrame with indexes.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; df2 = pd.DataFrame(data, columns=[&#39;City&#39;, &#39;Year&#39;], index=[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;])
-&gt;&gt;&gt; df2 
-    City   Year
-a   Pune   2012
-b   Mumbai 2013
-c   Delhi  2012
-d   Pune   2013
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df2</span>
+    <span class="n">City</span>   <span class="n">Year</span>
+<span class="n">a</span>   <span class="n">Pune</span>   <span class="mi">2012</span>
+<span class="n">b</span>   <span class="n">Mumbai</span> <span class="mi">2013</span>
+<span class="n">c</span>   <span class="n">Delhi</span>  <span class="mi">2012</span>
+<span class="n">d</span>   <span class="n">Pune</span>   <span class="mi">2013</span>
+</code></pre></div>
 
 
 <p><strong>Plotting and Visualization:</strong></p>
 <p>For visulaisation data python module matplotlib is used. Matplotlib is 2D plotting library wich produce different types of figures like histogram, 3D view, etc.</p>
 <p>Here is small example:</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">sin_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">cos_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
@@ -203,7 +205,7 @@ d   Pune   2013
 <span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X axis&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y axis&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><img alt="Figure1" class="alignnone size-full wp-image-428" height="612" src="/images/figure1.jpeg" width="812"> Output of above code.</p>

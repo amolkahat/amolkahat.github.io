@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Amol Kahat - Hacking</title><link href="/" rel="alternate"></link><link href="/feeds/hacking.atom.xml" rel="self"></link><id>/</id><updated>2017-05-16T18:27:00+05:30</updated><subtitle>Blog</subtitle><entry><title>Hacking with Weechat</title><link href="/hacking-with-weechat.html" rel="alternate"></link><published>2017-05-16T18:27:00+05:30</published><updated>2017-05-16T18:27:00+05:30</updated><author><name>amolkahat</name></author><id>tag:None,2017-05-16:/hacking-with-weechat.html</id><summary type="html">&lt;p&gt;HexChat / Xchat is best IRC client to get started. If you are using this from long time then believe that you need some thrill.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;So what I've done ??&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I installed &lt;em&gt;irssi ,&lt;/em&gt; and forget that i have best GUI based IRC clients. After installing i started hacking with the irssi. So …&lt;/p&gt;</summary><content type="html">&lt;p&gt;HexChat / Xchat is best IRC client to get started. If you are using this from long time then believe that you need some thrill.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;So what I've done ??&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I installed &lt;em&gt;irssi ,&lt;/em&gt; and forget that i have best GUI based IRC clients. After installing i started hacking with the irssi. So basics of the irssi is same as the Hexchat / Xchat. But that i get to know after i started hacking on irssi.&lt;/p&gt;
+&lt;p&gt;I was searching for another terminal based IRC clients and i found &lt;em&gt;weechat.&lt;/em&gt; Weechat is same as irssi but with large set of plugins in python and more customization options are available.&lt;/p&gt;
+&lt;p&gt;I configured weechat with freenode server and it's default channels like, #fedora-india, #fedora-hubs, #fedora-apps, #pypune, #pyconpune etc. So configuring it like a fun. I completely rely on keyboard to check the messages and etc.&lt;/p&gt;
+&lt;p&gt;IRC commands which i learned:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;connect :&lt;/strong&gt; To connect the server&lt;code&gt;/connect freenode&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Join :&lt;/strong&gt; To join the channel &lt;code&gt;/join #fedora-india&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;server :&lt;/strong&gt; To add, list and remove IRC servers.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;query:  &lt;/strong&gt;For private chat.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;exit :&lt;/strong&gt; To exit IRC client.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;So now i'm trying to get used to with it. Let's see how long i'm going to use it. I learn 5 commands in a day. And that's basics of the IRC.  Believe or not but hole one day i'm just using that commands.&lt;/p&gt;
+&lt;p&gt;Now let's start using it's shortcuts. :P&lt;/p&gt;</content><category term="Hacking"></category></entry></feed>
