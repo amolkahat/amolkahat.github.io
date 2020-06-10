@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="TripleO Container Image Preparation TripleO support containerized undercloud and overcloud. Containerized overcloud feature is added in OSP 12 and containerized undercloud in OSP 14 with Docker as...">
+        <meta name="keywords" content="ansible, openstack, tripleo">
+        <link rel="icon" href="/favicon.ico">
+
+        <title>TripleO Container Image Preparation - Amol Kahat</title>
+
+        <!-- Stylesheets -->
+        <link href="/theme/css/all.min.css" rel="stylesheet">
+        <!-- /Stylesheets -->
+
+        <!-- RSS Feeds -->
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Full Atom Feed" />
+        <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Amol Kahat Categories Atom Feed" />
+        <!-- /RSS Feeds -->
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Amol Kahat</a>
+                    </div>
+                    <div class="nav pull-right">
+                                <a href="/">Homepage</a>
+                                <a href="/categories.html">Categories</a>
+                            <a  href="/pages/about.html">About</a>
+                            <a  href="/pages/presentation.html">Presentations</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">TripleO Container Image Preparation</h1>
+                      <p class="header-date">By <a href="/author/amolkahat.html">amolkahat</a>, Wed 10 June 2020, in category <a href="/category/tripleo.html">Tripleo</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/ansible.html">ansible</a>, <a href="/tag/openstack.html">openstack</a>, <a href="/tag/tripleo.html">tripleo</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <h2>TripleO Container Image Preparation</h2>
+<p>TripleO support containerized undercloud and overcloud. Containerized overcloud feature is added in OSP 12 and containerized undercloud in OSP 14 with Docker as it's container engine. In OSP 15 it can be changed to Podman. And later versions it support podman. </p>
+<p>TripleO container images are stored in <a href="https://hub.docker.com/u/tripleomaster">docker registry</a> or any custom registry. Images getting pulled from registry while deployment. </p>
+<p>Container images can be available anywhere. Either in default registry or on undercloud node or you can use your own custom registry. To overcome conflicts of the images registry, version etc, <em>container-image-parameters.yaml</em> file is introduced. </p>
+<h3>What is container-image-parameters.yaml file?</h3>
+<ul>
+<li>
+<p>Simple yaml file</p>
+</li>
+<li>
+<p>Include meatadata about the container, like:</p>
+</li>
+<li>
+<p>Pull location, push location</p>
+</li>
+<li>
+<p>tag, release, version</p>
+</li>
+<li>
+<p>authentication credentials</p>
+</li>
+<li>
+<p>Image include, exclude options</p>
+</li>
+</ul>
+<h3>Why container-image-parameters.yaml file?</h3>
+<ul>
+<li>Use different registry to pull and push</li>
+<li>Pull images with different tags</li>
+<li>Modify and push custom images</li>
+<li>Authentication credentials to registry for pull and push</li>
+<li>Layring image preparation entries with include / exclude.</li>
+</ul>
+<h3>How to generate container-image-parameters.yaml file?</h3>
+<p>You can generate it using <code>openstack</code> command.</p>
+<div class="highlight"><pre><span></span><code>$ openstack tripleo container image prepare default --output-env-file ~/container-image-parameters.yaml
+</code></pre></div>
+
+
+<p>If you are using Ansible use following role to generate <em>container-image-parameters.yaml</em> file</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span> <span class="nt">hosts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">collections</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tripleo.operator</span>
+  <span class="nt">tasks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;Generate</span><span class="nv"> </span><span class="s">container-image-parameters.yaml</span><span class="nv"> </span><span class="s">file&quot;</span>
+      <span class="nt">inlclude_role</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo_container_image_prepare_default</span>
+      <span class="nt">vars</span><span class="p">:</span>
+        <span class="nt">tripleo_container_image_prepare_default_output_env_file</span><span class="p">:</span> <span class="s">&quot;~/container-image-parameters.yaml&quot;</span>
+</code></pre></div>
+
+
+<h3>How to use container-image-parameters.yaml file?</h3>
+<ul>
+<li>
+<p>While deploying containerized undercloud.</p>
+</li>
+<li>
+<p>In <em>udercloud.conf</em> file: </p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    <span class="nt">container_image_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/home/stack/container-image-parameters.yaml</span>
+</code></pre></div>
+
+
+<ul>
+<li>While deploying containerized overcloud you can pass it using <strong>-e</strong> option.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    $ openstack overcloud deploy -e /home/stack/container-image-parameters.yaml
+</code></pre></div>
+
+
+<ul>
+<li>Using Ansible</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Run overcloud deploy</span>
+      <span class="nt">import_role</span><span class="p">:</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo_overcloud_deploy</span>
+      <span class="nt">vars</span><span class="p">:</span>
+        <span class="nt">tripleo_overcloud_deploy_environment_files</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/home/stack/conatiner-image-parameters.yaml</span>
+</code></pre></div>
+
+
+<h3>Contents in container-image-parameters.yaml</h3>
+<p>Let's take a look what this <em>container-image-parameters.yaml</em> file has.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">parameter_defaults</span><span class="p">:</span>
+  <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">set</span><span class="p">:</span>
+      <span class="nt">ceph_alertmanager_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alertmanager</span>
+      <span class="nt">ceph_alertmanager_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_alertmanager_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v0.16.2</span>
+      <span class="nt">ceph_grafana_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grafana</span>
+      <span class="nt">ceph_grafana_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/grafana</span>
+      <span class="nt">ceph_grafana_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.4.3</span>
+      <span class="nt">ceph_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">daemon</span>
+      <span class="nt">ceph_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/ceph</span>
+      <span class="nt">ceph_node_exporter_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+      <span class="nt">ceph_node_exporter_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_node_exporter_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v0.17.0</span>
+      <span class="nt">ceph_prometheus_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+      <span class="nt">ceph_prometheus_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_prometheus_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v2.7.2</span>
+      <span class="nt">ceph_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v4.0.12-stable-4.0-nautilus-centos-7-x86_64</span>
+      <span class="nt">name_prefix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">centos-binary-</span>
+      <span class="nt">name_suffix</span><span class="p">:</span> <span class="s">&#39;&#39;</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/tripleomaster</span>
+      <span class="nt">neutron_driver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ovn</span>
+      <span class="nt">rhel_containers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="nt">tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current-tripleo</span>
+    <span class="nt">tag_from_label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rdo_version</span>
+</code></pre></div>
+
+
+<ul>
+<li>
+<p><strong>ContainerImagePrepare</strong> : This option include set / import / exclude parameters for specific container. </p>
+</li>
+<li>
+<p>All the parameters are starting with <code>ceph_*</code> are ceph specific parameters. It includes namespace pull images, image name and tag.</p>
+</li>
+<li>
+<p><code>name_prefix: centos-binary-</code> Pull all the images which are staring from <strong>centos-binary-</strong>* , you can see that <code>name_suffix: ''</code> is blank. While pulling images it will exclude <code>ceph_*</code> containers.</p>
+</li>
+<li>
+<p><code>neutron_driver: ovn</code> Use <strong>ovn</strong> neutron driver.</p>
+</li>
+<li>
+<p><code>tag: current-tripleo</code> All the images which as this tag will get pulled. This is equal to latest tag.</p>
+</li>
+<li>
+<p><code>tag_from_label: rdo_version</code> </p>
+</li>
+<li>
+<p>Some images are not tagged as <em>current_tripleo</em> , if those images needs to pull you can specify specific version and release tag.  <code>tag_from_label: {version}-{release}</code></p>
+</li>
+</ul>
+<h3>Push destination</h3>
+<p>Push destination is registry location where to push images which is pulled by deployer. This can be enabled by adding <code>--local-push-destination</code>. It will add <em>push_destination</em> parameter in the file.</p>
+<p><em>push_destination</em> either contain <strong>true</strong> or some other registry url. When it is set to <strong>true</strong>, deployer push the images to the undercloud. It's url will be discovered at the time of deployment. If some other location is specified images will be pushed there. </p>
+<div class="highlight"><pre><span></span><code>  <span class="nt">parameter_defaults</span><span class="p">:</span>
+    <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">set</span><span class="p">:</span>
+        <span class="nt">ceph_alertmanager_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alertmanager</span>
+        <span class="nt">ceph_alertmanager_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+        <span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+
+
+<h3>Push destination authentication</h3>
+<p>If push destination registry has authentication you can use <code>ContainerImageRegistryCredentials</code> to push the content.</p>
+<div class="highlight"><pre><span></span><code>  <span class="nt">parameter_defaults</span><span class="p">:</span>
+    <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xx.xx.xx.xx:xxxx</span> 
+      <span class="nt">set</span><span class="p">:</span>
+        <span class="nt">ceph_alertmanager_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alertmanager</span>
+        <span class="nt">ceph_alertmanager_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+        <span class="l l-Scalar l-Scalar-Plain">...</span>
+    <span class="nt">ContainerImageRegistryCredentials</span><span class="p">:</span>
+      <span class="s">&#39;quay.io&#39;</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span><span class="s">&#39;username&#39;</span><span class="p p-Indicator">,</span> <span class="s">&#39;password&#39;</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+
+
+<h3>Registry Login</h3>
+<p>Registry login can be enabled using <code>--enable-registry-login</code> option. Using this you can login to the registry while pulling the images. It can not be used with <code>--local-push-destination</code>.</p>
+<p>Do not use this option with the overcloud deployment. Overcloud nodes may not have the network connectivity to target registry.</p>
+<h3>Layers in container-image-parameters.yaml</h3>
+<p>Layers can be created in <em>container-image-parameters.yaml</em> . This layers can include specific image pull / push / update operation. </p>
+<div class="highlight"><pre><span></span><code><span class="nt">parameter_defaults</span><span class="p">:</span>
+  <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">set</span><span class="p">:</span>
+      <span class="nt">name_prefix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">centos-binary-</span>
+      <span class="nt">name_suffix</span><span class="p">:</span> <span class="s">&#39;&#39;</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/tripleomaster</span>
+      <span class="nt">neutron_driver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ovn</span>
+      <span class="nt">rhel_containers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="nt">tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current-tripleo</span>
+    <span class="nt">tag_from_label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rdo_version</span>
+    <span class="nt">exclude</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">ceph</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">set</span><span class="p">:</span>
+      <span class="nt">ceph_alertmanager_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alertmanager</span>
+      <span class="nt">ceph_alertmanager_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_alertmanager_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v0.16.2</span>
+      <span class="nt">ceph_grafana_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grafana</span>
+      <span class="nt">ceph_grafana_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/grafana</span>
+      <span class="nt">ceph_grafana_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.4.3</span>
+      <span class="nt">ceph_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">daemon</span>
+      <span class="nt">ceph_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/ceph</span>
+      <span class="nt">ceph_node_exporter_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+      <span class="nt">ceph_node_exporter_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_node_exporter_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v0.17.0</span>
+      <span class="nt">ceph_prometheus_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+      <span class="nt">ceph_prometheus_namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/prom</span>
+      <span class="nt">ceph_prometheus_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v2.7.2</span>
+      <span class="nt">ceph_tag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v4.0.12-stable-4.0-nautilus-centos-7-x86_64</span>
+    <span class="nt">includes</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">ceph</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+
+<h3>Modify images</h3>
+<p>You can modify image while preparing it. This approach is very useful in CI or development workflow. Images can be updated using <a href="https://github.com/openstack/ansible-role-tripleo-modify-image">tripleo-modify-images</a> role. Image name, and updates (in form of patch, Dockerfile or rpm) can be passed as variables.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">...</span>
+  <span class="nt">modify_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo-modify-image</span>
+  <span class="nt">modify_append_tag</span><span class="p">:</span> <span class="s">&quot;-updated&quot;</span>
+  <span class="nt">modify_vars</span><span class="p">:</span>
+    <span class="nt">tasks_from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yum_update.yml</span>
+    <span class="nt">compare_host_packages</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">yum_repos_dir_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/etc/yum.repos.d</span>
+  <span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+
+
+<p>In above yaml is:</p>
+<ul>
+<li><em>modify_role</em> is Ansible role which modify the images. </li>
+<li><em>modify_append_tag</em>: Tag need to added after the image updated.</li>
+<li>
+<p><em>modify_vars</em>: List of variables passed to the role. Above tasks will update all the packages in container.</p>
+</li>
+<li>
+<h4>Modify using Gerrit</h4>
+<ul>
+<li>Role vars to modify image using gerrit.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>      <span class="nt">modify_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo-modify-image</span>
+      <span class="nt">modify_append_tag</span><span class="p">:</span> <span class="s">&quot;-updated_change_1_2_3&quot;</span>  <span class="c1"># Gerrit changes: refs/changes/1/2/3/</span>
+      <span class="nt">modify_vars</span><span class="p">:</span>
+        <span class="nt">task_from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dev_install.yaml</span>
+        <span class="nt">source_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker.io/tripleomaster/centos-binary-nova-compute:current-tripleo</span>
+        <span class="nt">refspecs</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span>
+           <span class="nt">project</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nova</span>
+           <span class="nt">refspec</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">refs/changes/1/2/3</span>
+</code></pre></div>
+
+
+<ul>
+<li>
+<h4>Install package</h4>
+<ul>
+<li>Role vars to modify using rpm</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>      <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">...</span>
+        <span class="nt">includes</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nova-compute</span>
+        <span class="nt">modify_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo-modify-image</span>
+        <span class="nt">modify_append_tag</span><span class="p">:</span> <span class="s">&quot;-hotfix&quot;</span>
+        <span class="nt">modify_vars</span><span class="p">:</span>
+          <span class="nt">tasks_from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpm_install.yml</span>
+          <span class="nt">rpms_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/home/stack/nova-hotfix-pkgs</span>
+        <span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+
+
+<ul>
+<li>
+<h4>Update using dockerfile</h4>
+<ul>
+<li>Role vars to modify using Dockerfile.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>      <span class="nt">ContainerImagePrepare</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">push_destination</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">...</span>
+        <span class="nt">includes</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nova-compute</span>
+        <span class="nt">modify_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tripleo-modify-image</span>
+        <span class="nt">modify_append_tag</span><span class="p">:</span> <span class="s">&quot;-hotfix&quot;</span>
+        <span class="nt">modify_vars</span><span class="p">:</span>
+          <span class="nt">tasks_from</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modify_image.yml</span>
+          <span class="nt">modify_dir_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/home/stack/nova-custom</span>
+</code></pre></div>
+
+
+<h2>Conclusion</h2>
+<p>Well, I think <em>container_image_perapare.yaml</em> file is very useful for different purpose. It absolutely reduced the complexity to deal with the containers and repository. </p>
+
+
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Sitemap</div>
+                        <ul class="list-unstyled">
+                            <li><a href="/archives.html">Archives</a></li>
+                            <li><a href="/tags.html">Tags</a></li>
+                            <li><a href="/authors.html">Authors</a></li>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Social</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://in.linkedin.com/in/amolkahat" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://twitter.com/amolkahat" target="_blank">Twitter</a></li>
+                            <li><a href="https://keybase.io/amolkahat" target="_blank">Keybase</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title">Links</div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/amolkahat" target="_blank">Github</a></li>
+                            <li><a href="" target="_blank"></a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small>&copy; amolkahat.github.io 2020</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
+</html>

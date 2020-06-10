@@ -1,5 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Amol Kahat - TripleO</title><link href="/" rel="alternate"></link><link href="/feeds/tripleo.atom.xml" rel="self"></link><id>/</id><updated>2020-05-27T17:00:00+05:30</updated><subtitle>Blog</subtitle><entry><title>Deploy Standalone TripleO using tripleo-operator-ansible</title><link href="/deploy-standalone-tripleo-using-tripleo-operator-ansible.html" rel="alternate"></link><published>2020-05-27T17:00:00+05:30</published><updated>2020-05-27T17:00:00+05:30</updated><author><name>amolkahat</name></author><id>tag:None,2020-05-27:/deploy-standalone-tripleo-using-tripleo-operator-ansible.html</id><summary type="html">&lt;p&gt;&lt;a href="https://docs.openstack.org/tripleo-operator-ansible/latest/"&gt;Tripleo-operator-ansible&lt;/a&gt; contains playbooks that can be used to automate TripleO OpenStack deployments. It is just an wrapper around the openstack tripleo cli.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Amol Kahat - TripleO</title><link href="/" rel="alternate"></link><link href="/feeds/tripleo.atom.xml" rel="self"></link><id>/</id><updated>2020-06-10T18:00:00+05:30</updated><subtitle>Blog</subtitle><entry><title>TripleO Container Image Preparation</title><link href="/tripleo-container-image-preparation.html" rel="alternate"></link><published>2020-06-10T18:00:00+05:30</published><updated>2020-06-10T18:00:00+05:30</updated><author><name>amolkahat</name></author><id>tag:None,2020-06-10:/tripleo-container-image-preparation.html</id><summary type="html">&lt;h2&gt;TripleO Container Image Preparation&lt;/h2&gt;
+&lt;p&gt;TripleO support containerized undercloud and overcloud. Containerized overcloud feature is added in OSP 12 and containerized undercloud in OSP 14 with Docker as it's container engine. In OSP 15 it can be changed to Podman. And later versions it support podman. &lt;/p&gt;
+&lt;p&gt;TripleO container images are stored …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;TripleO Container Image Preparation&lt;/h2&gt;
+&lt;p&gt;TripleO support containerized undercloud and overcloud. Containerized overcloud feature is added in OSP 12 and containerized undercloud in OSP 14 with Docker as it's container engine. In OSP 15 it can be changed to Podman. And later versions it support podman. &lt;/p&gt;
+&lt;p&gt;TripleO container images are stored in &lt;a href="https://hub.docker.com/u/tripleomaster"&gt;docker registry&lt;/a&gt; or any custom registry. Images getting pulled from registry while deployment. &lt;/p&gt;
+&lt;p&gt;Container images can be available anywhere. Either in default registry or on undercloud node or you can use your own custom registry. To overcome conflicts of the images registry, version etc, &lt;em&gt;container-image-parameters.yaml&lt;/em&gt; file is introduced. &lt;/p&gt;
+&lt;h3&gt;What is container-image-parameters.yaml file?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Simple yaml file&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Include meatadata about the container, like:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pull location, push location&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;tag, release, version&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;authentication credentials&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Image include, exclude options&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Why container-image-parameters.yaml file?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Use different registry to pull and push&lt;/li&gt;
+&lt;li&gt;Pull images with different tags&lt;/li&gt;
+&lt;li&gt;Modify and push custom images&lt;/li&gt;
+&lt;li&gt;Authentication credentials to registry for pull and push&lt;/li&gt;
+&lt;li&gt;Layring image preparation entries with include / exclude.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;How to generate container-image-parameters.yaml file?&lt;/h3&gt;
+&lt;p&gt;You can generate it using &lt;code&gt;openstack&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ openstack tripleo container image prepare default --output-env-file ~/container-image-parameters.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you are using Ansible use following role to generate &lt;em&gt;container-image-parameters.yaml&lt;/em&gt; file&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nn"&gt;---&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;hosts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;localhost&lt;/span&gt;
+  &lt;span class="nt"&gt;collections&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo.operator&lt;/span&gt;
+  &lt;span class="nt"&gt;tasks&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Generate&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;container-image-parameters.yaml&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;file&amp;quot;&lt;/span&gt;
+      &lt;span class="nt"&gt;inlclude_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo_container_image_prepare_default&lt;/span&gt;
+      &lt;span class="nt"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;tripleo_container_image_prepare_default_output_env_file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;~/container-image-parameters.yaml&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;How to use container-image-parameters.yaml file?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;While deploying containerized undercloud.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In &lt;em&gt;udercloud.conf&lt;/em&gt; file: &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;    &lt;span class="nt"&gt;container_image_file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/stack/container-image-parameters.yaml&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;While deploying containerized overcloud you can pass it using &lt;strong&gt;-e&lt;/strong&gt; option.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;    $ openstack overcloud deploy -e /home/stack/container-image-parameters.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Using Ansible&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Run overcloud deploy&lt;/span&gt;
+      &lt;span class="nt"&gt;import_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo_overcloud_deploy&lt;/span&gt;
+      &lt;span class="nt"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;tripleo_overcloud_deploy_environment_files&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/stack/conatiner-image-parameters.yaml&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Contents in container-image-parameters.yaml&lt;/h3&gt;
+&lt;p&gt;Let's take a look what this &lt;em&gt;container-image-parameters.yaml&lt;/em&gt; file has.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;parameter_defaults&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;set&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alertmanager&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v0.16.2&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;grafana&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/grafana&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5.4.3&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;daemon&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/ceph&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;node-exporter&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v0.17.0&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;prometheus&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v2.7.2&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v4.0.12-stable-4.0-nautilus-centos-7-x86_64&lt;/span&gt;
+      &lt;span class="nt"&gt;name_prefix&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;centos-binary-&lt;/span&gt;
+      &lt;span class="nt"&gt;name_suffix&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/tripleomaster&lt;/span&gt;
+      &lt;span class="nt"&gt;neutron_driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ovn&lt;/span&gt;
+      &lt;span class="nt"&gt;rhel_containers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;false&lt;/span&gt;
+      &lt;span class="nt"&gt;tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;current-tripleo&lt;/span&gt;
+    &lt;span class="nt"&gt;tag_from_label&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;rdo_version&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ContainerImagePrepare&lt;/strong&gt; : This option include set / import / exclude parameters for specific container. &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;All the parameters are starting with &lt;code&gt;ceph_*&lt;/code&gt; are ceph specific parameters. It includes namespace pull images, image name and tag.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;name_prefix: centos-binary-&lt;/code&gt; Pull all the images which are staring from &lt;strong&gt;centos-binary-&lt;/strong&gt;* , you can see that &lt;code&gt;name_suffix: ''&lt;/code&gt; is blank. While pulling images it will exclude &lt;code&gt;ceph_*&lt;/code&gt; containers.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;neutron_driver: ovn&lt;/code&gt; Use &lt;strong&gt;ovn&lt;/strong&gt; neutron driver.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tag: current-tripleo&lt;/code&gt; All the images which as this tag will get pulled. This is equal to latest tag.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tag_from_label: rdo_version&lt;/code&gt; &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Some images are not tagged as &lt;em&gt;current_tripleo&lt;/em&gt; , if those images needs to pull you can specify specific version and release tag.  &lt;code&gt;tag_from_label: {version}-{release}&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Push destination&lt;/h3&gt;
+&lt;p&gt;Push destination is registry location where to push images which is pulled by deployer. This can be enabled by adding &lt;code&gt;--local-push-destination&lt;/code&gt;. It will add &lt;em&gt;push_destination&lt;/em&gt; parameter in the file.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;push_destination&lt;/em&gt; either contain &lt;strong&gt;true&lt;/strong&gt; or some other registry url. When it is set to &lt;strong&gt;true&lt;/strong&gt;, deployer push the images to the undercloud. It's url will be discovered at the time of deployment. If some other location is specified images will be pushed there. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="nt"&gt;parameter_defaults&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+      &lt;span class="nt"&gt;set&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;ceph_alertmanager_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alertmanager&lt;/span&gt;
+        &lt;span class="nt"&gt;ceph_alertmanager_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Push destination authentication&lt;/h3&gt;
+&lt;p&gt;If push destination registry has authentication you can use &lt;code&gt;ContainerImageRegistryCredentials&lt;/code&gt; to push the content.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="nt"&gt;parameter_defaults&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;xx.xx.xx.xx:xxxx&lt;/span&gt; 
+      &lt;span class="nt"&gt;set&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;ceph_alertmanager_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alertmanager&lt;/span&gt;
+        &lt;span class="nt"&gt;ceph_alertmanager_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+    &lt;span class="nt"&gt;ContainerImageRegistryCredentials&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="s"&gt;&amp;#39;quay.io&amp;#39;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Registry Login&lt;/h3&gt;
+&lt;p&gt;Registry login can be enabled using &lt;code&gt;--enable-registry-login&lt;/code&gt; option. Using this you can login to the registry while pulling the images. It can not be used with &lt;code&gt;--local-push-destination&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Do not use this option with the overcloud deployment. Overcloud nodes may not have the network connectivity to target registry.&lt;/p&gt;
+&lt;h3&gt;Layers in container-image-parameters.yaml&lt;/h3&gt;
+&lt;p&gt;Layers can be created in &lt;em&gt;container-image-parameters.yaml&lt;/em&gt; . This layers can include specific image pull / push / update operation. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;parameter_defaults&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+    &lt;span class="nt"&gt;set&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;name_prefix&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;centos-binary-&lt;/span&gt;
+      &lt;span class="nt"&gt;name_suffix&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/tripleomaster&lt;/span&gt;
+      &lt;span class="nt"&gt;neutron_driver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ovn&lt;/span&gt;
+      &lt;span class="nt"&gt;rhel_containers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;false&lt;/span&gt;
+      &lt;span class="nt"&gt;tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;current-tripleo&lt;/span&gt;
+    &lt;span class="nt"&gt;tag_from_label&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;rdo_version&lt;/span&gt;
+    &lt;span class="nt"&gt;exclude&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;ceph&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+    &lt;span class="nt"&gt;set&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alertmanager&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_alertmanager_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v0.16.2&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;grafana&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/grafana&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_grafana_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5.4.3&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;daemon&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/ceph&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;node-exporter&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_node_exporter_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v0.17.0&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;prometheus&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/prom&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_prometheus_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v2.7.2&lt;/span&gt;
+      &lt;span class="nt"&gt;ceph_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v4.0.12-stable-4.0-nautilus-centos-7-x86_64&lt;/span&gt;
+    &lt;span class="nt"&gt;includes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;ceph&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Modify images&lt;/h3&gt;
+&lt;p&gt;You can modify image while preparing it. This approach is very useful in CI or development workflow. Images can be updated using &lt;a href="https://github.com/openstack/ansible-role-tripleo-modify-image"&gt;tripleo-modify-images&lt;/a&gt; role. Image name, and updates (in form of patch, Dockerfile or rpm) can be passed as variables.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+  &lt;span class="nt"&gt;modify_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo-modify-image&lt;/span&gt;
+  &lt;span class="nt"&gt;modify_append_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;-updated&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;modify_vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;tasks_from&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;yum_update.yml&lt;/span&gt;
+    &lt;span class="nt"&gt;compare_host_packages&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+    &lt;span class="nt"&gt;yum_repos_dir_path&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/etc/yum.repos.d&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In above yaml is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;modify_role&lt;/em&gt; is Ansible role which modify the images. &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;modify_append_tag&lt;/em&gt;: Tag need to added after the image updated.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;modify_vars&lt;/em&gt;: List of variables passed to the role. Above tasks will update all the packages in container.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;h4&gt;Modify using Gerrit&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Role vars to modify image using gerrit.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;      &lt;span class="nt"&gt;modify_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo-modify-image&lt;/span&gt;
+      &lt;span class="nt"&gt;modify_append_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;-updated_change_1_2_3&amp;quot;&lt;/span&gt;  &lt;span class="c1"&gt;# Gerrit changes: refs/changes/1/2/3/&lt;/span&gt;
+      &lt;span class="nt"&gt;modify_vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;task_from&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;dev_install.yaml&lt;/span&gt;
+        &lt;span class="nt"&gt;source_image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;docker.io/tripleomaster/centos-binary-nova-compute:current-tripleo&lt;/span&gt;
+        &lt;span class="nt"&gt;refspecs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="p p-Indicator"&gt;-&lt;/span&gt;
+           &lt;span class="nt"&gt;project&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;nova&lt;/span&gt;
+           &lt;span class="nt"&gt;refspec&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;refs/changes/1/2/3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h4&gt;Install package&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Role vars to modify using rpm&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;      &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+        &lt;span class="nt"&gt;includes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;nova-compute&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo-modify-image&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_append_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;-hotfix&amp;quot;&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="nt"&gt;tasks_from&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;rpm_install.yml&lt;/span&gt;
+          &lt;span class="nt"&gt;rpms_path&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/stack/nova-hotfix-pkgs&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h4&gt;Update using dockerfile&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Role vars to modify using Dockerfile.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;      &lt;span class="nt"&gt;ContainerImagePrepare&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;push_destination&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;...&lt;/span&gt;
+        &lt;span class="nt"&gt;includes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;nova-compute&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_role&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tripleo-modify-image&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_append_tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;-hotfix&amp;quot;&lt;/span&gt;
+        &lt;span class="nt"&gt;modify_vars&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="nt"&gt;tasks_from&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;modify_image.yml&lt;/span&gt;
+          &lt;span class="nt"&gt;modify_dir_path&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/home/stack/nova-custom&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Well, I think &lt;em&gt;container_image_perapare.yaml&lt;/em&gt; file is very useful for different purpose. It absolutely reduced the complexity to deal with the containers and repository. &lt;/p&gt;</content><category term="TripleO"></category><category term="ansible"></category><category term="openstack"></category><category term="tripleo"></category></entry><entry><title>Deploy Standalone TripleO using tripleo-operator-ansible</title><link href="/deploy-standalone-tripleo-using-tripleo-operator-ansible.html" rel="alternate"></link><published>2020-05-27T17:00:00+05:30</published><updated>2020-05-27T17:00:00+05:30</updated><author><name>amolkahat</name></author><id>tag:None,2020-05-27:/deploy-standalone-tripleo-using-tripleo-operator-ansible.html</id><summary type="html">&lt;p&gt;&lt;a href="https://docs.openstack.org/tripleo-operator-ansible/latest/"&gt;Tripleo-operator-ansible&lt;/a&gt; contains playbooks that can be used to automate TripleO OpenStack deployments. It is just an wrapper around the openstack tripleo cli.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Why Tripleo-operator-ansible?&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Automation:&lt;/strong&gt; Automate Tripleo Openstack deployment with different scenarios and featureset. It will be very easy to use simple role instead of writing whole code. Automating things …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://docs.openstack.org/tripleo-operator-ansible/latest/"&gt;Tripleo-operator-ansible&lt;/a&gt; contains playbooks that can be used to automate TripleO OpenStack deployments. It is just an wrapper around the openstack tripleo cli.&lt;/p&gt;
@@ -109,7 +399,7 @@ $ wget https://trunk.rdoproject.org/centos8-master/delorean-deps.repo -O /etc/yu
         &lt;span class="nt"&gt;state&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;present&lt;/span&gt;
       &lt;span class="nt"&gt;become&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
 
-    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Generate ContainerParameters.yaml&lt;/span&gt;
+    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Generate parameters.yaml&lt;/span&gt;
       &lt;span class="nt"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="nt"&gt;content&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;|&lt;/span&gt;
           &lt;span class="no"&gt;parameter_defaults:&lt;/span&gt;
